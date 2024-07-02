@@ -1,0 +1,12 @@
+{
+    "compression": "lz4",
+    "deduplication": "on",
+    "xattr": "sa",
+    "acltype": "posixacl",
+    "atime": "off",
+    "relatime": "off",
+    "sync": "standard",
+    "recordsize": "128K",
+    "logbias": "throughput",
+    "checksum": "sha256"
+}

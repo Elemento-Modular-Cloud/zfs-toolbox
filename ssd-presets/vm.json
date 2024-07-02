@@ -8,5 +8,5 @@
     "sync": "standard",
     "recordsize": "8K",
     "logbias": "latency",
-    "checksum": "fletcher4"
+    "checksum": "skein"
   }

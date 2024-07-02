@@ -6,8 +6,8 @@
     "atime": "off",
     "relatime": "on",
     "sync": "standard",
-    "recordsize": "1M",
+    "recordsize": "16K",
     "logbias": "throughput",
-    "checksum": "skein"
+    "checksum": "sha256"
   }
   

@@ -4,10 +4,10 @@
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 # Directory where presets are located
-PRESET_DIR="$SCRIPT_DIR/presets"
+PRESET_DIR="$SCRIPT_DIR/ssd-presets"
 
 # Default mount point
-DEFAULT_MOUNTPOINT="/mnt/nvme_pool"
+DEFAULT_MOUNTPOINT="/mnt/ssd_pool"
 
 # Dry run flag
 DRY_RUN=false
@@ -19,9 +19,9 @@ usage() {
     echo "  -p, --preset     Name of the preset configuration (without .json)"
     echo "  -n, --pool       Name of the ZFS pool to be created"
     echo "  -m, --mountpoint Optional: Mount point for the ZFS pool (default: $DEFAULT_MOUNTPOINT)"
-    echo "  DISKS            List of NVMe disks in ZFS vdev format (e.g., /dev/nvme0n1 /dev/nvme1n1)"
+    echo "  DISKS            List of SSD disks in ZFS vdev format (e.g., /dev/ssd0n1 /dev/ssd1n1)"
     echo ""
-    echo "Example: $0 --preset vm --pool myzpool --mountpoint /mnt/zpool /dev/nvme0n1 /dev/nvme1n1"
+    echo "Example: $0 --preset vm --pool myzpool --mountpoint /mnt/zpool /dev/ssd0n1 /dev/ssd1n1"
 }
 
 # Function to calculate ashift value
@@ -112,7 +112,7 @@ create_pool_with_preset() {
     local LOGBIAS=$(echo "$PRESET_JSON" | jq -r '.logbias')
     local CHECKSUM=$(echo "$PRESET_JSON" | jq -r '.checksum')
 
-    # Create ZFS pool
+    # Create ZFS pool with preset configurations
     zfs_or_echo set compression=$COMPRESSION $POOL_NAME
     zfs_or_echo set dedup=$DEDUPLICATION $POOL_NAME
     zfs_or_echo set xattr=$XATTR $POOL_NAME
@@ -123,6 +123,7 @@ create_pool_with_preset() {
     zfs_or_echo set recordsize=$RECORDSIZE $POOL_NAME
     zfs_or_echo set logbias=$LOGBIAS $POOL_NAME
     zfs_or_echo set checksum=$CHECKSUM $POOL_NAME
+    zfs_or_echo set autotrim=on $POOL_NAME
 
     # Set mount point
     zfs_or_echo set mountpoint=$MOUNTPOINT $POOL_NAME

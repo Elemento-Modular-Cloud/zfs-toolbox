@@ -6,8 +6,8 @@
     "atime": "off",
     "relatime": "on",
     "sync": "standard",
-    "recordsize": "16K",
+    "recordsize": "1M",
     "logbias": "throughput",
-    "checksum": "skein"
+    "checksum": "fletcher4"
   }
   

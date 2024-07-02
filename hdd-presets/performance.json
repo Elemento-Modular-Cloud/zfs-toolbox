@@ -1,0 +1,13 @@
+{
+    "compression": "off",
+    "deduplication": "off",
+    "xattr": "sa",
+    "acltype": "posixacl",
+    "atime": "off",
+    "relatime": "off",
+    "sync": "disabled",
+    "recordsize": "4K",
+    "logbias": "latency",
+    "checksum": "fletcher4"
+}
+  
