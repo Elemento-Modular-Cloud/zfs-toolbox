@@ -4,10 +4,11 @@
 SCRIPT_DIR=$(dirname "$(readlink -f "$0")")
 
 # Directory where presets are located
-PRESET_DIR="$SCRIPT_DIR/ssd-presets"
+SSD_PRESET_DIR="$SCRIPT_DIR/ssd-presets"
+HDD_PRESET_DIR="$SCRIPT_DIR/hdd-presets"
 
 # Default mount point
-DEFAULT_MOUNTPOINT="/mnt/ssd_pool"
+DEFAULT_MOUNTPOINT="/mnt/zpool"
 
 # Dry run flag
 DRY_RUN=false
@@ -15,13 +16,20 @@ DRY_RUN=false
 # Function to display usage information
 usage() {
     echo "Usage: $0 [--dry-run] [-p|--preset PRESET_NAME] [-n|--pool POOL_NAME] [-m|--mountpoint MOUNTPOINT] [DISKS...]"
+    echo "       $0 --hdd|--ssd [-p PRESET_NAME] [-n POOL_NAME] [-m MOUNTPOINT] [DISKS...]"
+    echo ""
+    echo "Options:"
     echo "  --dry-run        Perform a dry run (echo commands instead of executing them)"
     echo "  -p, --preset     Name of the preset configuration (without .json)"
     echo "  -n, --pool       Name of the ZFS pool to be created"
     echo "  -m, --mountpoint Optional: Mount point for the ZFS pool (default: $DEFAULT_MOUNTPOINT)"
-    echo "  DISKS            List of SSD disks in ZFS vdev format (e.g., /dev/ssd0n1 /dev/ssd1n1)"
+    echo "  --hdd            Assume all disks are HDDs"
+    echo "  --ssd            Assume all disks are SSDs"
+    echo "  DISKS            List of disks in ZFS vdev format (e.g., /dev/disk/by-id/...)"
     echo ""
-    echo "Example: $0 --preset vm --pool myzpool --mountpoint /mnt/zpool /dev/ssd0n1 /dev/ssd1n1"
+    echo "Examples:"
+    echo "  $0 --ssd --preset vm --pool myzpool --mountpoint /mnt/zpool /dev/disk/by-id/..."
+    echo "  $0 /dev/disk/by-id/..."
 }
 
 # Function to calculate ashift value
@@ -46,12 +54,47 @@ zfs_or_echo() {
     fi
 }
 
-# Function to create a ZFS pool with presets
+# Function to determine if a disk is an SSD
+is_ssd() {
+    local DISK=$1
+    local ROTA=$(lsblk -no rota "$DISK")
+    if [ "$ROTA" -eq 0 ]; then
+        return 0  # SSD
+    else
+        return 1  # HDD
+    fi
+}
+
+# Function to interactively ask user to choose between SSD or HDD assumption
+ask_disk_type() {
+    local DISK=$1
+    local TYPE=
+    while true; do
+        read -p "Disk $DISK is detected as SSD. Is this correct? [Y/n]: " answer
+        case $answer in
+            [Yy]*)
+                TYPE="ssd"
+                break
+                ;;
+            [Nn]*)
+                TYPE="hdd"
+                break
+                ;;
+            *)
+                echo "Please answer Y or n."
+                ;;
+        esac
+    done
+    echo "$TYPE"
+}
+
+# Function to create a ZFS pool with presets based on disk type
 create_pool_with_preset() {
     local PRESET_NAME=
     local POOL_NAME=
     local MOUNTPOINT=$DEFAULT_MOUNTPOINT
     local DISKS=()
+    local ASSUMED_TYPE=
 
     while [[ $# -gt 0 ]]; do
         key="$1"
@@ -71,6 +114,14 @@ create_pool_with_preset() {
                 shift
                 shift
                 ;;
+            --ssd)
+                ASSUMED_TYPE="ssd"
+                shift
+                ;;
+            --hdd)
+                ASSUMED_TYPE="hdd"
+                shift
+                ;;
             *)
                 DISKS+=("$1")
                 shift
@@ -84,7 +135,45 @@ create_pool_with_preset() {
         exit 1
     fi
 
-    local PRESET_FILE="$PRESET_DIR/$PRESET_NAME.json"
+    # Determine the type of each disk
+    local FIRST_DISK="${DISKS[0]}"
+    if [ -z "$ASSUMED_TYPE" ]; then
+        local ALL_SAME_TYPE=true
+        local ASSUMED_TYPE=""
+
+        for disk in "${DISKS[@]}"; do
+            if is_ssd "$disk"; then
+                if [ "$ASSUMED_TYPE" = "hdd" ]; then
+                    ALL_SAME_TYPE=false
+                    break
+                elif [ -z "$ASSUMED_TYPE" ]; then
+                    ASSUMED_TYPE="ssd"
+                fi
+            else
+                if [ "$ASSUMED_TYPE" = "ssd" ]; then
+                    ALL_SAME_TYPE=false
+                    break
+                elif [ -z "$ASSUMED_TYPE" ]; then
+                    ASSUMED_TYPE="hdd"
+                fi
+            fi
+        done
+
+        if ! $ALL_SAME_TYPE; then
+            # Prompt user to choose SSD or HDD assumption
+            ASSUMED_TYPE=$(ask_disk_type "$FIRST_DISK")
+        fi
+    fi
+
+    # Select preset directory based on assumed disk type
+    if [ "$ASSUMED_TYPE" = "ssd" ]; then
+        local PRESET_FILE="$SSD_PRESET_DIR/$PRESET_NAME.json"
+    elif [ "$ASSUMED_TYPE" = "hdd" ]; then
+        local PRESET_FILE="$HDD_PRESET_DIR/$PRESET_NAME.json"
+    else
+        echo "Error: Unable to determine disk type assumption."
+        exit 1
+    fi
 
     # Validate preset file
     if [ ! -f "$PRESET_FILE" ]; then
@@ -123,7 +212,11 @@ create_pool_with_preset() {
     zfs_or_echo set recordsize=$RECORDSIZE $POOL_NAME
     zfs_or_echo set logbias=$LOGBIAS $POOL_NAME
     zfs_or_echo set checksum=$CHECKSUM $POOL_NAME
-    zfs_or_echo set autotrim=on $POOL_NAME
+
+    # Set autotrim on for SSDs
+    if [ "$ASSUMED_TYPE" = "ssd" ]; then
+        zfs_or_echo set autotrim=on $POOL_NAME
+    fi
 
     # Set mount point
     zfs_or_echo set mountpoint=$MOUNTPOINT $POOL_NAME
@@ -153,6 +246,14 @@ while [[ $# -gt 0 ]]; do
             ;;
         --dry-run)
             DRY_RUN=true
+            shift
+            ;;
+        --ssd)
+            ASSUMED_TYPE="ssd"
+            shift
+            ;;
+        --hdd)
+            ASSUMED_TYPE="hdd"
             shift
             ;;
         *)
