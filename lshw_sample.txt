@@ -1,0 +1,353 @@
+  *-nvme
+       description: NVMe device
+       product: INTEL SSDPEK1A118GA
+       vendor: Intel Corporation
+       physical id: 0
+       bus info: pci@0000:01:00.0
+       logical name: /dev/nvme2
+       version: U5110550
+       serial: PHOC331300DW118B
+       width: 64 bits
+       clock: 33MHz
+       capabilities: nvme pm msix pciexpress msi nvm_express bus_master cap_list
+       configuration: driver=nvme latency=0 nqn=nqn.2014.08.org.nvmexpress:80868086PHOC331300DW118B    INTEL SSDPEK1A118GA state=live
+       resources: irq:106 memory:f2a00000-f2a03fff
+     *-namespace:0
+          description: NVMe disk
+          physical id: 0
+          logical name: /dev/ng2n1
+     *-namespace:1
+          description: NVMe disk
+          physical id: 1
+          bus info: nvme@2:1
+          logical name: /dev/nvme2n1
+          size: 110GiB (118GB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: guid=a125b7da-4c19-4d65-ba16-847b9183ba8a logicalsectorsize=512 sectorsize=512 wwid=eui.5cd2e4af8f4f0100
+  *-nvme
+       description: NVMe device
+       product: INTEL SSDPEK1A118GA
+       vendor: Intel Corporation
+       physical id: 0
+       bus info: pci@0000:02:00.0
+       logical name: /dev/nvme3
+       version: U5110550
+       serial: PHOC3313013E118B
+       width: 64 bits
+       clock: 33MHz
+       capabilities: nvme pm msix pciexpress msi nvm_express bus_master cap_list
+       configuration: driver=nvme latency=0 nqn=nqn.2014.08.org.nvmexpress:80868086PHOC3313013E118B    INTEL SSDPEK1A118GA state=live
+       resources: irq:110 memory:f2900000-f2903fff
+     *-namespace:0
+          description: NVMe disk
+          physical id: 0
+          logical name: /dev/ng3n1
+     *-namespace:1
+          description: NVMe disk
+          physical id: 1
+          bus info: nvme@3:1
+          logical name: /dev/nvme3n1
+          size: 110GiB (118GB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: guid=5e42f263-b64a-452d-9cc0-015b04a85d40 logicalsectorsize=512 sectorsize=512 wwid=eui.5cd2e4c4924f0100
+  *-sata
+       description: SATA controller
+       product: ASM1064 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:03:00.0
+       logical name: scsi81
+       logical name: scsi83
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+       configuration: driver=ahci latency=0
+       resources: irq:236 memory:f2882000-f2883fff memory:f2880000-f2881fff memory:f2800000-f287ffff
+     *-disk:0
+          description: ATA Disk
+          product: WDC  WUH722020AL
+          vendor: Western Digital
+          physical id: 0
+          bus info: scsi@81:0.0.0
+          logical name: /dev/sdf
+          version: W108
+          serial: 2LGLYJNF
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=8f5f3da4-8138-f64a-8e25-d1c1f795107f logicalsectorsize=512 sectorsize=4096
+     *-disk:1
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 1
+          bus info: scsi@83:0.0.0
+          logical name: /dev/sdg
+          version: W540
+          serial: 9AG9WZHS
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=8fe782f6-ea11-8648-bdff-b5450994906e logicalsectorsize=512 sectorsize=4096
+  *-sata
+       description: SATA controller
+       product: ASM1064 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:04:00.0
+       logical name: scsi105
+       logical name: scsi107
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+       configuration: driver=ahci latency=0
+       resources: irq:238 memory:f2782000-f2783fff memory:f2780000-f2781fff memory:f2700000-f277ffff
+     *-disk:0
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 0
+          bus info: scsi@105:0.0.0
+          logical name: /dev/sdh
+          version: W540
+          serial: 9AG3N3JE
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=3ed440da-c105-ee44-b004-a60136cf3082 logicalsectorsize=512 sectorsize=4096
+     *-disk:1
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 1
+          bus info: scsi@107:0.0.0
+          logical name: /dev/sdi
+          version: W540
+          serial: 9AG4RNGE
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=c5890981-ccec-ad44-8064-9249d561eb23 logicalsectorsize=512 sectorsize=4096
+  *-sata
+       description: SATA controller
+       product: ASM1064 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:05:00.0
+       logical name: scsi132
+       logical name: scsi130
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+       configuration: driver=ahci latency=0
+       resources: irq:240 memory:f2682000-f2683fff memory:f2680000-f2681fff memory:f2600000-f267ffff
+     *-disk:0
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 0
+          bus info: scsi@132:0.0.0
+          logical name: /dev/sdk
+          version: W540
+          serial: 9AG39YSE
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=cb83cb4f-278d-7c4b-9ea0-e40426cec521 logicalsectorsize=512 sectorsize=4096
+     *-disk:1
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 1
+          bus info: scsi@130:0.0.0
+          logical name: /dev/sdj
+          version: W540
+          serial: 9AG469XE
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=3a8ef6a9-9ff9-3745-9f36-7a940ec1fbbc logicalsectorsize=512 sectorsize=4096
+  *-sata
+       description: SATA controller
+       product: ASM1061/ASM1062 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:26:00.0
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata msi pm pciexpress ahci_1.0 bus_master cap_list
+       configuration: driver=ahci latency=0
+       resources: irq:153 ioport:3050(size=8) ioport:3040(size=4) ioport:3030(size=8) ioport:3020(size=4) ioport:3000(size=32) memory:c4600000-c46001ff
+  *-sata
+       description: SATA controller
+       product: ASM1061/ASM1062 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:27:00.0
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata msi pm pciexpress ahci_1.0 bus_master cap_list
+       configuration: driver=ahci latency=0
+       resources: irq:154 ioport:2050(size=8) ioport:2040(size=4) ioport:2030(size=8) ioport:2020(size=4) ioport:2000(size=32) memory:c4500000-c45001ff
+  *-sata
+       description: SATA controller
+       product: FCH SATA Controller [AHCI mode]
+       vendor: Advanced Micro Devices, Inc. [AMD]
+       physical id: 0
+       bus info: pci@0000:2b:00.0
+       logical name: scsi76
+       logical name: scsi80
+       version: 51
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm pciexpress msi ahci_1.0 bus_master cap_list emulated
+       configuration: driver=ahci latency=0
+       resources: irq:219 memory:c4400000-c44007ff
+     *-disk:0
+          description: ATA Disk
+          product: KINGSTON SEDC600
+          physical id: 0
+          bus info: scsi@76:0.0.0
+          logical name: /dev/sdd
+          version: H5.1
+          serial: 50026B7686B445CD
+          size: 447GiB (480GB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=6a2f62c7-8190-4fc5-9736-de3c093c3872 logicalsectorsize=512 sectorsize=512
+     *-disk:1
+          description: ATA Disk
+          product: KINGSTON SEDC600
+          physical id: 1
+          bus info: scsi@80:0.0.0
+          logical name: /dev/sde
+          version: H5.1
+          serial: 50026B7686B44377
+          size: 447GiB (480GB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=6a2f62c7-8190-4fc5-9736-de3c093c3872 logicalsectorsize=512 sectorsize=512
+  *-nvme
+       description: NVMe device
+       product: SAMSUNG MZ1L2960HCJR-00A07
+       vendor: Samsung Electronics Co Ltd
+       physical id: 0
+       bus info: pci@0000:41:00.0
+       logical name: /dev/nvme0
+       version: GDC7502Q
+       serial: S665NN0X403453
+       width: 64 bits
+       clock: 33MHz
+       capabilities: nvme pm msi pciexpress msix nvm_express bus_master cap_list rom
+       configuration: driver=nvme latency=0 nqn=nqn.1994-11.com.samsung:nvme:PM9A3:M.2:S665NN0X403453 state=live
+       resources: irq:105 memory:f0110000-f0113fff memory:f0100000-f010ffff
+     *-namespace:0
+          description: NVMe disk
+          physical id: 0
+          logical name: /dev/ng0n1
+     *-namespace:1
+          description: NVMe disk
+          physical id: 1
+          bus info: nvme@0:1
+          logical name: /dev/nvme0n1
+          size: 894GiB (960GB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: guid=9937de07-f4a8-aa4f-827b-4f9c64f3c5cd logicalsectorsize=512 sectorsize=4096 wwid=eui.36363530584034530025384e00000001
+  *-nvme
+       description: NVMe device
+       product: SAMSUNG MZ1L2960HCJR-00A07
+       vendor: Samsung Electronics Co Ltd
+       physical id: 0
+       bus info: pci@0000:42:00.0
+       logical name: /dev/nvme1
+       version: GDC7502Q
+       serial: S665NN0X403442
+       width: 64 bits
+       clock: 33MHz
+       capabilities: nvme pm msi pciexpress msix nvm_express bus_master cap_list rom
+       configuration: driver=nvme latency=0 nqn=nqn.1994-11.com.samsung:nvme:PM9A3:M.2:S665NN0X403442 state=live
+       resources: irq:107 memory:f0010000-f0013fff memory:f0000000-f000ffff
+     *-namespace:0
+          description: NVMe disk
+          physical id: 0
+          logical name: /dev/ng1n1
+     *-namespace:1
+          description: NVMe disk
+          physical id: 1
+          bus info: nvme@1:1
+          logical name: /dev/nvme1n1
+          size: 894GiB (960GB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: guid=9f57f1e9-0a04-a242-b83d-e4150d9abbc2 logicalsectorsize=512 sectorsize=4096 wwid=eui.36363530584034420025384e00000001
+  *-sata
+       description: SATA controller
+       product: ASM1064 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:61:00.0
+       logical name: scsi1
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+       configuration: driver=ahci latency=0
+       resources: irq:131 memory:f2482000-f2483fff memory:f2480000-f2481fff memory:f2400000-f247ffff
+     *-disk
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 0.0.0
+          bus info: scsi@1:0.0.0
+          logical name: /dev/sda
+          version: W540
+          serial: 8LG7WT1E
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=1994295f-195d-f94c-807f-a722674a4e30 logicalsectorsize=512 sectorsize=4096
+  *-sata
+       description: SATA controller
+       product: ASM1064 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:62:00.0
+       logical name: scsi24
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+       configuration: driver=ahci latency=0
+       resources: irq:142 memory:f2382000-f2383fff memory:f2380000-f2381fff memory:f2300000-f237ffff
+     *-disk
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 0.0.0
+          bus info: scsi@24:0.0.0
+          logical name: /dev/sdb
+          version: W540
+          serial: 9AG48HLE
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=58746f9d-8ce4-f14d-b490-370b9fa53047 logicalsectorsize=512 sectorsize=4096
+  *-sata
+       description: SATA controller
+       product: ASM1064 Serial ATA Controller
+       vendor: ASMedia Technology Inc.
+       physical id: 0
+       bus info: pci@0000:63:00.0
+       logical name: scsi49
+       version: 02
+       width: 32 bits
+       clock: 33MHz
+       capabilities: sata pm msi pciexpress ahci_1.0 bus_master cap_list rom emulated
+       configuration: driver=ahci latency=0
+       resources: irq:152 memory:f2282000-f2283fff memory:f2280000-f2281fff memory:f2200000-f227ffff
+     *-disk
+          description: ATA Disk
+          product: WDC  WUH722020BL
+          vendor: Western Digital
+          physical id: 0.0.0
+          bus info: scsi@49:0.0.0
+          logical name: /dev/sdc
+          version: W540
+          serial: 9AG4GA4E
+          size: 18TiB (20TB)
+          capabilities: gpt-1.00 partitioned partitioned:gpt
+          configuration: ansiversion=5 guid=e3f3c543-ee82-fb45-b65d-5ef78433d93f logicalsectorsize=512 sectorsize=4096
