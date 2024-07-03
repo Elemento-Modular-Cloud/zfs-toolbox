@@ -145,6 +145,7 @@ create_pool_with_preset() {
             echo "Checking disk $disk"
             if [ -f "$disk" ] ; then
                 if is_ssd "$disk"; then
+                    echo "Is SSD"
                     if [ "$ASSUMED_TYPE" = "hdd" ]; then
                         ALL_SAME_TYPE=false
                         break
@@ -152,6 +153,7 @@ create_pool_with_preset() {
                         ASSUMED_TYPE="ssd"
                     fi
                 else
+                    echo "Is HDD"
                     if [ "$ASSUMED_TYPE" = "ssd" ]; then
                         ALL_SAME_TYPE=false
                         break
