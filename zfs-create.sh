@@ -215,7 +215,6 @@ create_pool_with_preset() {
     # Create ZFS pool with preset configurations
     run_or_echo zpool create -o ashift=$ASHIFT $POOL_NAME ${DISKS[@]}
     run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
-    run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
     run_or_echo zfs set dedup=$DEDUPLICATION $POOL_NAME
     run_or_echo zfs set xattr=$XATTR $POOL_NAME
     run_or_echo zfs set acltype=$ACLTYPE $POOL_NAME
