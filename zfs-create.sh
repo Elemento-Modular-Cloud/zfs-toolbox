@@ -142,19 +142,21 @@ create_pool_with_preset() {
         local ASSUMED_TYPE=""
 
         for disk in "${DISKS[@]}"; do
-            if is_ssd "$disk"; then
-                if [ "$ASSUMED_TYPE" = "hdd" ]; then
-                    ALL_SAME_TYPE=false
-                    break
-                elif [ -z "$ASSUMED_TYPE" ]; then
-                    ASSUMED_TYPE="ssd"
-                fi
-            else
-                if [ "$ASSUMED_TYPE" = "ssd" ]; then
-                    ALL_SAME_TYPE=false
-                    break
-                elif [ -z "$ASSUMED_TYPE" ]; then
-                    ASSUMED_TYPE="hdd"
+            if [ -f "$disk" ] ; then
+                if is_ssd "$disk"; then
+                    if [ "$ASSUMED_TYPE" = "hdd" ]; then
+                        ALL_SAME_TYPE=false
+                        break
+                    elif [ -z "$ASSUMED_TYPE" ]; then
+                        ASSUMED_TYPE="ssd"
+                    fi
+                else
+                    if [ "$ASSUMED_TYPE" = "ssd" ]; then
+                        ALL_SAME_TYPE=false
+                        break
+                    elif [ -z "$ASSUMED_TYPE" ]; then
+                        ASSUMED_TYPE="hdd"
+                    fi
                 fi
             fi
         done
