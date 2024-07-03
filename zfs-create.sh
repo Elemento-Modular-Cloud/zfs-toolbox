@@ -57,7 +57,7 @@ zfs_or_echo() {
 # Function to determine if a disk is an SSD
 is_ssd() {
     local DISK=$1
-    local ROTA=$(lsblk -no rota "$DISK")
+    local ROTA=$(lsblk -no rota "$DISK" | head -n 1)
     if [ "$ROTA" -eq 0 ]; then
         return 0  # SSD
     else
