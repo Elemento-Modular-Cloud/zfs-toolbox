@@ -1,37 +1,37 @@
 #!/bin/bash
 
-# Get lshw output for storage, disk, and controller class
-lshw_output=$(sudo lshw -class storage -class disk -class controller)
+# Run the lshw command to get storage and disk information
+output=$(sudo lshw -class storage -class disk)
 
-# Function to print the tree-like structure
-print_tree() {
-    local prefix="$1"
-    local class="$2"
-    local label="$3"
-    local indent="|-- "
-    local sub_indent="|   "
+# Initialize variables
+controller_count=0
+disk_count=0
+declare -A controllers
 
-    echo "${prefix}${indent}${label}"
-    
-    if [[ "$class" == "controller" || "$class" == "storage" ]]; then
-        local devices=$(echo "$lshw_output" | awk "/$label/,/\*-(disk|controller|storage)/")
-    else
-        local devices=$(echo "$lshw_output" | awk "/$label/,/^\*-/")
-    fi
-    
-    echo "$devices" | grep -E "product:|serial:" | sed "s/^/${prefix}${sub_indent}/"
-}
-
-# Process the output to build the tree structure
+# Parse the lshw output
 while IFS= read -r line; do
-    if [[ "$line" =~ \*-controller ]]; then
-        controller_label=$(echo "$line" | sed 's/.*-controller //')
-        print_tree "" "controller" "$controller_label"
-    elif [[ "$line" =~ \*-storage ]]; then
-        storage_label=$(echo "$line" | sed 's/.*-storage //')
-        print_tree "    " "storage" "$storage_label"
-    elif [[ "$line" =~ \*-disk ]]; then
-        disk_label=$(echo "$line" | sed 's/.*-disk //')
-        print_tree "        " "disk" "$disk_label"
+    line=$(echo "$line" | sed 's/^[ \t]*//')
+    
+    if [[ "$line" == *-nvme* || "$line" == *-sata* ]]; then
+        if [[ $controller_count -ne 0 ]]; then
+            controllers["controller$controller_count"]="$disk_count"
+        fi
+        ((controller_count++))
+        disk_count=0
+    elif [[ "$line" == description:*ATA*Disk* || "$line" == description:*NVMe*disk* ]]; then
+        ((disk_count++))
     fi
-done <<< "$lshw_output"
+done <<< "$output"
+
+# Add the last controller to the array
+controllers["controller$controller_count"]="$disk_count"
+
+# Display the hierarchical relationship
+for ((i=1; i<=controller_count; i++)); do
+    echo "controller$i"
+    echo "|"
+    disk_count=${controllers["controller$i"]}
+    for ((j=1; j<=disk_count; j++)); do
+        echo "_____disk$j"
+    done
+done
