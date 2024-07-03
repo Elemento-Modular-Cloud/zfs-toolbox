@@ -189,7 +189,8 @@ select_zfs_pool
 disable_zfs_cache
 
 # Run generic benchmarks
-benchmark_generic_fio $mountpoint
+benchmark_generic_sequential_fio $mountpoint
+benchmark_generic_random_fio $mountpoint
 # benchmark_generic_iozone $mountpoint
 
 # Run VM volumes benchmarks
