@@ -163,8 +163,8 @@ output_benchmark_results() {
     echo "==========================="
     echo "Fio Benchmark Results:"
     echo "==========================="
-    grep -A 20 "fio.*WRITE" $result_dir/fio_generic_$selected_pool.log
-    grep -A 20 "fio.*READ" $result_dir/fio_sequential_rw_$selected_pool.log
+    grep -A 20 "fio.*WRITE" $result_dir/fio_generic_random_$selected_pool.log
+    grep -A 20 "fio.*READ" $result_dir/fio_generic_sequential_$selected_pool.log
     grep -A 20 "fio.*WRITE" $result_dir/fio_vm_volumes_$selected_pool.log
     grep -A 20 "fio.*WRITE" $result_dir/fio_data_$selected_pool.log
     grep -A 20 "fio.*READ" $result_dir/fio_database_$selected_pool.log
@@ -194,15 +194,15 @@ benchmark_generic_random_fio $mountpoint
 # benchmark_generic_iozone $mountpoint
 
 # Run VM volumes benchmarks
-# benchmark_vm_volumes_fio $mountpoint
+benchmark_vm_volumes_fio $mountpoint
 # benchmark_vm_volumes_iozone $mountpoint
 
 # Run data workloads benchmarks
-# benchmark_data_fio $mountpoint
+benchmark_data_fio $mountpoint
 # benchmark_data_iozone $mountpoint
 
 # Run database workloads benchmarks
-# benchmark_database_fio $mountpoint
+benchmark_database_fio $mountpoint
 # benchmark_database_iozone $mountpoint
 
 # Output synthetic benchmark results
