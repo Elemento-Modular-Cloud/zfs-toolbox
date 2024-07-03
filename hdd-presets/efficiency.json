@@ -7,6 +7,6 @@
     "relatime": "off",
     "sync": "standard",
     "recordsize": "128K",
-    "logbias": "latency",
+    "logbias": "throughput",
     "checksum": "sha256"
 }

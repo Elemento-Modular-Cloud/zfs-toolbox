@@ -7,7 +7,7 @@
     "relatime": "off",
     "sync": "disabled",
     "recordsize": "1M",
-    "logbias": "throughput",
+    "logbias": "latency",
     "checksum": "fletcher4"
 }
   
