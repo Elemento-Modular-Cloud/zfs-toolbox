@@ -12,6 +12,8 @@ parse_lshw() {
     local current_disk=""
     local controllers=()
 
+    echo "$output"
+
     while IFS= read -r line; do
         line=$(echo "$line" | sed -e 's/^[[:space:]]*//')
 
