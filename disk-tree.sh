@@ -26,12 +26,18 @@ done <<< "$output"
 # Add the last controller to the array
 controllers["controller$controller_count"]="$disk_count"
 
-# Display the hierarchical relationship
+# Display the hierarchical relationship in a tree-like format
 for ((i=1; i<=controller_count; i++)); do
-    echo "controller$i"
-    echo "|"
+    if [[ $i -gt 1 ]]; then
+        echo -e "│"
+    fi
+    echo -e "├── controller$i"
     disk_count=${controllers["controller$i"]}
     for ((j=1; j<=disk_count; j++)); do
-        echo "_____disk$j"
+        if [[ $j -lt $disk_count ]]; then
+            echo -e "│   ├── disk$j"
+        else
+            echo -e "│   └── disk$j"
+        fi
     done
 done
