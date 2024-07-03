@@ -75,7 +75,7 @@ def group_by_controller_and_disks(parsed_data):
     return grouped_data
 
 
-def main():
+def example_data():
     # # Example output given
     # output_short = """
     # *-sata
@@ -118,22 +118,38 @@ def main():
     #         configuration: ansiversion=5 guid=8fe782f6-ea11-8648-bdff-b5450994906e logicalsectorsize=512 sectorsize=4096
     # """
 
-    # # Open the file and read its contents
-    # with open('lshw_sample.txt', 'r') as f:
-    #     output_long = f.read()
+    # Open the file and read its contents
+    with open('lshw_sample.txt', 'r') as f:
+        output_long = f.read()
+    return output_long
+
+
+def main():
 
     parsed_data = parse_output(parse_lshw())
 
     grouped_data = group_by_controller_and_disks(parsed_data)
 
-    # Output formatted as requested
+    # ANSI color escape sequences
+    COLOR_CONTROLLER = '\033[94m'
+    COLOR_DISK = '\033[93m'
+    COLOR_END = '\033[0m'  # Reset color
+
+    # Print tree-like output with color
     for controller_id, data in grouped_data.items():
         controller_info = data['controller_info']
         disks = data['disks']
-        print(f"{controller_info['product']} {controller_info['vendor']} @{controller_info['bus_info']}")
+        
+        # Print colored controller info
+        print(f"{COLOR_CONTROLLER}{controller_info['product']} {controller_info['vendor']} @{controller_info['bus_info']}{COLOR_END}")
+        
+        # Print disks
         for idx, disk in enumerate(disks):
             disk_name = f"disk{idx}: ATA Disk {disk['product']} {disk['serial']} with device {disk['logical_name']} and size {disk['size']}"
-            print(f"    {disk_name}")
+            print(f"    {COLOR_DISK}{disk_name}{COLOR_END}")
+        
+        # Print a newline for separation
+        print()
 
 
 if __name__ == "__main__":
