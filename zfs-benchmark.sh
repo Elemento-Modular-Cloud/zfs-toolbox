@@ -34,7 +34,7 @@ select_zfs_pool() {
 benchmark_generic_sequential_fio() {
     local target_dir=$1
     local result_dir="fio_results"
-    local fio_job_file="fio_jobs/fio_generic_sequential.ini"
+    local fio_job_file="fio-jobs/fio_generic_sequential.ini"
 
     echo "Benchmarking generic sequential workloads on ZFS pool $selected_pool with fio..."
     mkdir -p $result_dir
@@ -49,7 +49,7 @@ benchmark_generic_sequential_fio() {
 benchmark_generic_random_fio() {
     local target_dir=$1
     local result_dir="fio_results"
-    local fio_job_file="fio_jobs/fio_generic_random.ini"
+    local fio_job_file="fio-jobs/fio_generic_random.ini"
 
     echo "Benchmarking generic random workloads on ZFS pool $selected_pool with fio..."
     mkdir -p $result_dir
