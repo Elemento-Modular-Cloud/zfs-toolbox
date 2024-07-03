@@ -137,8 +137,8 @@ create_pool_with_preset() {
 
     # Determine the type of each disk
     local FIRST_DISK="${DISKS[0]}"
-    if [ -e "$FIRST_DISK" ] ; then
-        FIRST_DISK="${DISKS[1]}"
+    if [ ! -e "$FIRST_DISK" ] ; then
+        FIRST_DISK="${DISKS[2]}"
     fi
 
     echo "First valid disk is $FIRSTDISK"
