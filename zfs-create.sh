@@ -40,8 +40,8 @@ calculate_ashift() {
     echo $ASHIFT
 }
 
-# Wrapper function to execute zfs command or echo based on DRY_RUN flag
-zfs_or_echo() {
+# Wrapper function to execute commands or echo based on DRY_RUN flag
+run_or_echo() {
     if [ "$DRY_RUN" = true ]; then
         echo "Dry run: $@"
     else
@@ -213,24 +213,26 @@ create_pool_with_preset() {
     local CHECKSUM=$(echo "$PRESET_JSON" | jq -r '.checksum')
 
     # Create ZFS pool with preset configurations
-    zfs_or_echo set compression=$COMPRESSION $POOL_NAME
-    zfs_or_echo set dedup=$DEDUPLICATION $POOL_NAME
-    zfs_or_echo set xattr=$XATTR $POOL_NAME
-    zfs_or_echo set acltype=$ACLTYPE $POOL_NAME
-    zfs_or_echo set atime=$ATIME $POOL_NAME
-    zfs_or_echo set relatime=$RELATIME $POOL_NAME
-    zfs_or_echo set sync=$SYNC $POOL_NAME
-    zfs_or_echo set recordsize=$RECORDSIZE $POOL_NAME
-    zfs_or_echo set logbias=$LOGBIAS $POOL_NAME
-    zfs_or_echo set checksum=$CHECKSUM $POOL_NAME
+    run_or_echo zpool create -o ashift=$ASHIFT $POOL_NAME $DISKS
+    run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
+    run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
+    run_or_echo zfs set dedup=$DEDUPLICATION $POOL_NAME
+    run_or_echo zfs set xattr=$XATTR $POOL_NAME
+    run_or_echo zfs set acltype=$ACLTYPE $POOL_NAME
+    run_or_echo zfs set atime=$ATIME $POOL_NAME
+    run_or_echo zfs set relatime=$RELATIME $POOL_NAME
+    run_or_echo zfs set sync=$SYNC $POOL_NAME
+    run_or_echo zfs set recordsize=$RECORDSIZE $POOL_NAME
+    run_or_echo zfs set logbias=$LOGBIAS $POOL_NAME
+    run_or_echo zfs set checksum=$CHECKSUM $POOL_NAME
 
     # Set autotrim on for SSDs
     if [ "$ASSUMED_TYPE" = "ssd" ]; then
-        zfs_or_echo set autotrim=on $POOL_NAME
+        run_or_echo set autotrim=on $POOL_NAME
     fi
 
     # Set mount point
-    zfs_or_echo set mountpoint=$MOUNTPOINT $POOL_NAME
+    run_or_echo set mountpoint=$MOUNTPOINT $POOL_NAME
 }
 
 # Main script logic
