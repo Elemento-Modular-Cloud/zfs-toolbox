@@ -251,29 +251,29 @@ trap cleanup EXIT
 select_zfs_pool
 
 # Disable ZFS caching
-disable_zfs_cache
+# disable_zfs_cache
 
 # Run generic benchmarks
 benchmark_generic_fio $mountpoint
-benchmark_generic_iozone $mountpoint
+# benchmark_generic_iozone $mountpoint
 
 # Run VM volumes benchmarks
-benchmark_vm_volumes_fio $mountpoint
-benchmark_vm_volumes_iozone $mountpoint
+# benchmark_vm_volumes_fio $mountpoint
+# benchmark_vm_volumes_iozone $mountpoint
 
 # Run data workloads benchmarks
-benchmark_data_fio $mountpoint
-benchmark_data_iozone $mountpoint
+# benchmark_data_fio $mountpoint
+# benchmark_data_iozone $mountpoint
 
 # Run database workloads benchmarks
-benchmark_database_fio $mountpoint
-benchmark_database_iozone $mountpoint
+# benchmark_database_fio $mountpoint
+# benchmark_database_iozone $mountpoint
 
 # Output synthetic benchmark results
 output_benchmark_results "fio_results"
-output_benchmark_results "iozone_results"
+# output_benchmark_results "iozone_results"
 
 # Enable ZFS caching
-enable_zfs_cache
+# enable_zfs_cache
 
 echo "Benchmarking complete!"
