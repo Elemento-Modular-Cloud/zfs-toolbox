@@ -43,14 +43,27 @@ benchmark_generic_fio() {
     # Create a fio job file for generic workloads
     cat << EOF > $fio_job_file
 [global]
-rw=randrw
 direct=1
 ioengine=libaio
-bs=4k
 size=10G
-numjobs=4
 runtime=300
 directory=$target_dir
+[job1]
+rw=randread
+bs=4k
+numjobs=4
+[job2]
+rw=randwrite
+bs=4k
+numjobs=4
+[job3]
+rw=read
+bs=128k
+numjobs=4
+[job4]
+rw=write
+bs=128k
+numjobs=4
 EOF
 
     echo "Running fio command: fio $fio_job_file"
