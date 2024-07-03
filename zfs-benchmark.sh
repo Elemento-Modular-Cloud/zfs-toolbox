@@ -30,19 +30,34 @@ select_zfs_pool() {
     mountpoint=$(zfs get -H -o value mountpoint $selected_pool)
 }
 
-# Generic benchmark function for fio
-benchmark_generic_fio() {
+# Generic benchmark function for fio sequential
+benchmark_generic_sequential_fio() {
     local target_dir=$1
     local result_dir="fio_results"
-    local fio_job_file="fio-jobs/fio_generic.ini"
+    local fio_job_file="fio_jobs/fio_generic_sequential.ini"
 
-    echo "Benchmarking generic workloads on ZFS pool $selected_pool with fio..."
+    echo "Benchmarking generic sequential workloads on ZFS pool $selected_pool with fio..."
     mkdir -p $result_dir
 
     echo "Running fio command: fio $fio_job_file"
-    fio $fio_job_file --output=$result_dir/fio_generic_$selected_pool.log --directory=$target_dir
+    fio $fio_job_file --output=$result_dir/fio_generic_sequential_$selected_pool.log --directory=$target_dir
 
-    echo "Generic workloads benchmarking with fio complete. Results saved in $result_dir/fio_generic_$selected_pool.log"
+    echo "Generic sequential workloads benchmarking with fio complete. Results saved in $result_dir/fio_generic_sequential_$selected_pool.log"
+}
+
+# Generic benchmark function for fio random
+benchmark_generic_random_fio() {
+    local target_dir=$1
+    local result_dir="fio_results"
+    local fio_job_file="fio_jobs/fio_generic_random.ini"
+
+    echo "Benchmarking generic random workloads on ZFS pool $selected_pool with fio..."
+    mkdir -p $result_dir
+
+    echo "Running fio command: fio $fio_job_file"
+    fio $fio_job_file --output=$result_dir/fio_generic_random_$selected_pool.log --directory=$target_dir
+
+    echo "Generic random workloads benchmarking with fio complete. Results saved in $result_dir/fio_generic_random_$selected_pool.log"
 }
 
 # Generic benchmark function for iozone
