@@ -1,66 +1,49 @@
 #!/bin/bash
 
-# Run the lshw command to get storage and disk information
-output=$(sudo lshw -class storage -class disk)
+# Function to run lshw command and capture output
+run_lshw() {
+    sudo lshw -class storage -class disk
+}
 
-# Initialize variables
-controller_count=0
-disk_count=0
-declare -A controllers
-declare -A models
-declare -A pci_slots
-declare -A disks
-declare -A disk_models
-declare -A disk_sizes
-declare -A disk_bus_types
+# Function to parse lshw output and organize into a structured array
+parse_lshw() {
+    local output="$1"
+    local current_controller=""
+    local disk_number=1
 
-# Parse the lshw output
-while IFS= read -r line; do
-    line=$(echo "$line" | sed 's/^[ \t]*//')
+    # Array to hold structured information
+    declare -A controllers
 
-    if [[ "$line" =~ ^\*- ]]; then
-        if [[ $controller_count -ne 0 ]]; then
-            controllers["controller$controller_count"]="$disk_count"
+    while IFS= read -r line; do
+        line=$(echo "$line" | sed -e 's/^[[:space:]]*//')
+
+        if [[ $line =~ \*-([a-zA-Z0-9]+) ]]; then
+            current_controller=${BASH_REMATCH[1]}
+            controllers[$current_controller]=""
+            disk_number=1
+        elif [[ $line =~ disk([0-9]+):[[:space:]]+(.*) ]]; then
+            disk_info="${BASH_REMATCH[2]}"
+            controllers[$current_controller]+="disk$disk_number: $disk_info\n"
+            (( disk_number++ ))
         fi
-        ((controller_count++))
-        disk_count=0
-    elif [[ "$line" == *description:* ]]; then
-        if [[ "$line" == *"storage controller"* ]]; then
-            description=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
-            models["controller$controller_count"]="$description"
-        elif [[ "$line" == *"disk"* ]]; then
-            ((disk_count++))
-            current_disk="controller$controller_count-disk$disk_count"
-            disk_models["$current_disk"]=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
-        fi
-    elif [[ "$line" == *businfo:* ]]; then
-        if [[ "$line" == *"pci@"* ]]; then
-            pci_slot=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
-            pci_slots["controller$controller_count"]="$pci_slot"
-        elif [[ "$line" == *"scsi@"* || "$line" == *"nvme@"* || "$line" == *"ata@"* ]]; then
-            disk_bus_types["$current_disk"]=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
-        fi
-    elif [[ "$line" == *size:* ]]; then
-        disk_sizes["$current_disk"]=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
-    fi
-done <<< "$output"
+    done <<< "$output"
 
-# Add the last controller to the array
-controllers["controller$controller_count"]="$disk_count"
-
-# Display the hierarchical relationship in a tree-like format
-for ((i=1; i<=controller_count; i++)); do
-    if [[ $i -gt 1 ]]; then
-        echo -e "│"
-    fi
-    echo -e "├── controller$i: ${models["controller$i"]} (PCI Slot: ${pci_slots["controller$i"]})"
-    disk_count=${controllers["controller$i"]}
-    for ((j=1; j<=disk_count; j++)); do
-        disk_key="controller$i-disk$j"
-        if [[ $j -lt $disk_count ]]; then
-            echo -e "│   ├── disk$j: ${disk_models["$disk_key"]}, ${disk_bus_types["$disk_key"]}, ${disk_sizes["$disk_key"]}"
-        else
-            echo -e "│   └── disk$j: ${disk_models["$disk_key"]}, ${disk_bus_types["$disk_key"]}, ${disk_sizes["$disk_key"]}"
-        fi
+    # Print structured information
+    for controller in "${!controllers[@]}"; do
+        printf "├── %s:\n" "$controller"
+        printf "%s\n" "${controllers[$controller]}"
     done
-done
+}
+
+# Main function
+main() {
+    lshw_output=$(run_lshw)
+    if [[ -n "$lshw_output" ]]; then
+        parse_lshw "$lshw_output"
+    else
+        echo "Failed to retrieve lshw output."
+    fi
+}
+
+# Execute main function
+main
