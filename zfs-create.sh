@@ -212,8 +212,15 @@ create_pool_with_preset() {
     local LOGBIAS=$(echo "$PRESET_JSON" | jq -r '.logbias')
     local CHECKSUM=$(echo "$PRESET_JSON" | jq -r '.checksum')
 
+    local AUTOTRIM_OPTION="autotrim=off"
+
+    # Set autotrim on for SSDs
+    if [ "$ASSUMED_TYPE" = "ssd" ]; then
+        AUTOTRIM_OPTION="autotrim=on"
+    fi
+
     # Create ZFS pool with preset configurations
-    run_or_echo zpool create -o ashift=$ASHIFT $POOL_NAME ${DISKS[@]}
+    run_or_echo zpool create -o ashift=$ASHIFT -o $AUTOTRIM_OPTION $POOL_NAME ${DISKS[@]}
     run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
     run_or_echo zfs set dedup=$DEDUPLICATION $POOL_NAME
     run_or_echo zfs set xattr=$XATTR $POOL_NAME
@@ -224,11 +231,6 @@ create_pool_with_preset() {
     run_or_echo zfs set recordsize=$RECORDSIZE $POOL_NAME
     run_or_echo zfs set logbias=$LOGBIAS $POOL_NAME
     run_or_echo zfs set checksum=$CHECKSUM $POOL_NAME
-
-    # Set autotrim on for SSDs
-    if [ "$ASSUMED_TYPE" = "ssd" ]; then
-        run_or_echo zfs set autotrim=on $POOL_NAME
-    fi
 
     # Set mount point
     run_or_echo zfs set mountpoint=$MOUNTPOINT $POOL_NAME
