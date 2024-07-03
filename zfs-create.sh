@@ -228,11 +228,11 @@ create_pool_with_preset() {
 
     # Set autotrim on for SSDs
     if [ "$ASSUMED_TYPE" = "ssd" ]; then
-        run_or_echo set autotrim=on $POOL_NAME
+        run_or_echo zfs set autotrim=on $POOL_NAME
     fi
 
     # Set mount point
-    run_or_echo set mountpoint=$MOUNTPOINT $POOL_NAME
+    run_or_echo zfs set mountpoint=$MOUNTPOINT $POOL_NAME
 }
 
 # Main script logic
