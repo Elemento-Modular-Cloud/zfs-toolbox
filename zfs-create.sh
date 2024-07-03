@@ -143,7 +143,7 @@ create_pool_with_preset() {
 
         for disk in "${DISKS[@]}"; do
             echo "Checking disk $disk"
-            if [ -f "$disk" ] ; then
+            if [ -e "$disk" ] ; then
                 if is_ssd "$disk"; then
                     echo "Is SSD"
                     if [ "$ASSUMED_TYPE" = "hdd" ]; then
