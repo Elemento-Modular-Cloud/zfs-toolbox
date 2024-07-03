@@ -231,9 +231,18 @@ create_pool_with_preset() {
     run_or_echo zfs set recordsize=$RECORDSIZE $POOL_NAME
     run_or_echo zfs set logbias=$LOGBIAS $POOL_NAME
     run_or_echo zfs set checksum=$CHECKSUM $POOL_NAME
+    run_or_echo zfs set canmount=on $POOL_NAME
 
     # Set mount point
     run_or_echo zfs set mountpoint=$MOUNTPOINT $POOL_NAME
+
+    # Showing some info
+    zpool status $POOL_NAME
+    echo
+    echo
+    zpool get all $POOL_NAME
+    echo
+    echo "ZFS Pool creation completed!"
 }
 
 # Main script logic
