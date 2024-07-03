@@ -141,6 +141,8 @@ create_pool_with_preset() {
         FIRST_DISK="${DISKS[1]}"
     fi
 
+    echo "First valid disk is $FIRSTDISK"
+
     if [ -z "$ASSUMED_TYPE" ]; then
         local ALL_SAME_TYPE=true
         local ASSUMED_TYPE=""
