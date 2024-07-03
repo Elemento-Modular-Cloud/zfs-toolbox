@@ -18,30 +18,30 @@ declare -A disk_bus_types
 while IFS= read -r line; do
     line=$(echo "$line" | sed 's/^[ \t]*//')
 
-    if [[ "$line" == *-nvme* || "$line" == *-sata* || "$line" == *-scsi* ]]; then
+    if [[ "$line" =~ ^\*- ]]; then
         if [[ $controller_count -ne 0 ]]; then
             controllers["controller$controller_count"]="$disk_count"
         fi
         ((controller_count++))
         disk_count=0
-    elif [[ "$line" == description:* ]]; then
+    elif [[ "$line" == *description:* ]]; then
         if [[ "$line" == *"storage controller"* ]]; then
-            description=$(echo "$line" | cut -d: -f2-)
+            description=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
             models["controller$controller_count"]="$description"
         elif [[ "$line" == *"disk"* ]]; then
             ((disk_count++))
             current_disk="controller$controller_count-disk$disk_count"
-            disk_models["$current_disk"]=$(echo "$line" | cut -d: -f2-)
+            disk_models["$current_disk"]=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
         fi
-    elif [[ "$line" == businfo:* ]]; then
+    elif [[ "$line" == *businfo:* ]]; then
         if [[ "$line" == *"pci@"* ]]; then
-            pci_slot=$(echo "$line" | cut -d: -f2-)
+            pci_slot=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
             pci_slots["controller$controller_count"]="$pci_slot"
         elif [[ "$line" == *"scsi@"* || "$line" == *"nvme@"* || "$line" == *"ata@"* ]]; then
-            disk_bus_types["$current_disk"]=$(echo "$line" | cut -d: -f2-)
+            disk_bus_types["$current_disk"]=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
         fi
-    elif [[ "$line" == size:* ]]; then
-        disk_sizes["$current_disk"]=$(echo "$line" | cut -d: -f2-)
+    elif [[ "$line" == *size:* ]]; then
+        disk_sizes["$current_disk"]=$(echo "$line" | cut -d: -f2- | sed 's/^ *//')
     fi
 done <<< "$output"
 
