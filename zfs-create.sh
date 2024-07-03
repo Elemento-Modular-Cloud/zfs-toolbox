@@ -137,6 +137,10 @@ create_pool_with_preset() {
 
     # Determine the type of each disk
     local FIRST_DISK="${DISKS[0]}"
+    if [ -e "$FIRST_DISK" ] ; then
+        FIRST_DISK="${DISKS[1]}"
+    fi
+
     if [ -z "$ASSUMED_TYPE" ]; then
         local ALL_SAME_TYPE=true
         local ASSUMED_TYPE=""
@@ -187,7 +191,7 @@ create_pool_with_preset() {
         exit 1
     fi
 
-    local ASHIFT=$(calculate_ashift "${DISKS[0]}")
+    local ASHIFT=$(calculate_ashift "$FIRST_DISK")
 
     echo "Creating ZFS pool $POOL_NAME with disks: ${DISKS[@]}"
     echo "Using ashift=$ASHIFT"
