@@ -213,7 +213,7 @@ create_pool_with_preset() {
     local CHECKSUM=$(echo "$PRESET_JSON" | jq -r '.checksum')
 
     # Create ZFS pool with preset configurations
-    run_or_echo zpool create -o ashift=$ASHIFT $POOL_NAME $DISKS
+    run_or_echo zpool create -o ashift=$ASHIFT $POOL_NAME ${DISKS[@]}
     run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
     run_or_echo zfs set compression=$COMPRESSION $POOL_NAME
     run_or_echo zfs set dedup=$DEDUPLICATION $POOL_NAME
