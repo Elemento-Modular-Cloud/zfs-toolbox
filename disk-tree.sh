@@ -9,30 +9,25 @@ run_lshw() {
 parse_lshw() {
     local output="$1"
     local current_controller=""
-    local disk_number=1
-
-    # Array to hold structured information
-    declare -A controllers
+    local current_disk=""
+    local controllers=()
 
     while IFS= read -r line; do
         line=$(echo "$line" | sed -e 's/^[[:space:]]*//')
 
         if [[ $line =~ \*-([a-zA-Z0-9]+) ]]; then
             current_controller=${BASH_REMATCH[1]}
-            controllers[$current_controller]=""
-            disk_number=1
-        elif [[ $line =~ disk([0-9]+):[[:space:]]+(.*) ]]; then
-            disk_info="${BASH_REMATCH[2]}"
-            controllers[$current_controller]+="disk$disk_number: $disk_info\n"
-            (( disk_number++ ))
+            controllers+=("$current_controller")
+        elif [[ $line =~ \*-namespace:([0-9]+) ]]; then
+            current_disk=$(echo "$line" | awk '{print $2}')
+            printf "├── %s:\n" "$current_controller"
+            printf "    └── %s\n" "$current_disk"
+        elif [[ $line =~ \*-disk:([0-9]+) ]]; then
+            current_disk=$(echo "$line" | awk -F ': ' '{print $2}')
+            printf "├── %s:\n" "$current_controller"
+            printf "    └── %s\n" "$current_disk"
         fi
     done <<< "$output"
-
-    # Print structured information
-    for controller in "${!controllers[@]}"; do
-        printf "├── %s:\n" "$controller"
-        printf "%s\n" "${controllers[$controller]}"
-    done
 }
 
 # Main function
