@@ -236,13 +236,15 @@ create_pool_with_preset() {
     # Set mount point
     run_or_echo zfs set mountpoint=$MOUNTPOINT $POOL_NAME
 
-    # Showing some info
-    zpool status $POOL_NAME
-    echo
-    echo
-    zpool get all $POOL_NAME
-    echo
-    echo "ZFS Pool creation completed!"
+    if [ "$DRY_RUN" = false ]; then
+        # Showing some info
+        zpool status $POOL_NAME
+        echo
+        echo
+        zpool get all $POOL_NAME
+        echo
+        echo "ZFS Pool creation completed!"
+    fi
 }
 
 # Main script logic
